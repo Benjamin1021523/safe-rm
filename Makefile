@@ -29,4 +29,5 @@ lint:
 	cargo audit --deny-warnings --quiet
 	cargo outdated --root-deps-only
 	cargo clippy --quiet
+	cargo doc --quiet
 	cargo tarpaulin --fail-under 90

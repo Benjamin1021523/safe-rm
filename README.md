@@ -42,12 +42,12 @@ The user-specific exclusions live in ~/.config/safe-rm and could include things 
 
 If you want more protection than what safe-rm can offer, here are a few suggestions.
 
-You could of couse request confirmation everytime you delete a file by putting this in
+You could of course request confirmation every time you delete a file by putting this in
 your /etc/bash.bashrc:
 
     alias rm='rm -i'
 
-But this won't protect you from getting used to always saying yes, or from accidently
+But this won't protect you from getting used to always saying yes, or from accidentally
 using 'rm -rf'.
 
 Or you could make use of the Linux filesystem "immutable" attribute by marking (as root)

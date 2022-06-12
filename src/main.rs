@@ -161,7 +161,7 @@ fn normalize_path(arg: &OsStr) -> OsString {
     // Handle symlinks.
     if let Ok(metadata) = path.symlink_metadata() {
         if metadata.file_type().is_symlink() {
-            return match symlink_canonicalize(&path) {
+            return match symlink_canonicalize(path) {
                 Some(normalized_path) => normalized_path.into_os_string(),
                 None => OsString::from(arg),
             };

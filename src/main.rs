@@ -21,7 +21,7 @@ use glob::glob;
 use std::ffi::{OsStr, OsString};
 use std::fs::{self, File};
 use std::io::{self, BufRead};
-use std::path::{self, Path, PathBuf};
+use std::path::{Path, PathBuf};
 use std::process;
 
 const GLOBAL_CONFIG: &str = "/etc/safe-rm.conf";

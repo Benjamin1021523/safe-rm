@@ -211,9 +211,7 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> Vec<PathBuf> {
     }
 
     if protected_paths.is_empty() {
-        for path in DEFAULT_PATHS {
-            protected_paths.push(PathBuf::from(path));
-        }
+        protected_paths.extend(DEFAULT_PATHS.iter().map(PathBuf::from));
     }
     protected_paths.sort();
     protected_paths.dedup();

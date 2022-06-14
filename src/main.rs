@@ -194,20 +194,17 @@ fn filter_arguments(
 }
 
 fn read_config_files(globals: &[&str], locals: &[&str]) -> Vec<PathBuf> {
-    let mut protected_paths = Vec::new();
+    let mut protected_paths: Vec<PathBuf> =
+        globals.iter().filter_map(read_config).flatten().collect();
 
-    for config_file in globals {
-        if let Some(paths) = read_config(config_file) {
-            protected_paths.extend(paths.into_iter());
-        }
-    }
     if let Ok(value) = std::env::var("HOME") {
         let home_dir = Path::new(&value);
-        for config_file in locals {
-            if let Some(paths) = read_config(&home_dir.join(Path::new(config_file))) {
-                protected_paths.extend(paths.into_iter());
-            }
-        }
+        protected_paths.extend(
+            locals
+                .iter()
+                .filter_map(|f| read_config(&home_dir.join(Path::new(f))))
+                .flatten(),
+        );
     }
 
     if protected_paths.is_empty() {

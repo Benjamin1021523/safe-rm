@@ -86,7 +86,7 @@ fn read_config<P: AsRef<Path>>(filename: P) -> Option<Vec<PathBuf>> {
     Some(paths)
 }
 
-fn parse_line<D: core::fmt::Display>(
+fn parse_line<D: std::fmt::Display>(
     filename: D,
     line_result: io::Result<String>,
 ) -> Option<Vec<PathBuf>> {

@@ -30,4 +30,5 @@ lint:
 	cargo outdated --root-deps-only
 	cargo clippy --quiet
 	cargo doc --quiet
+	cargo fmt --check
 	cargo tarpaulin --fail-under 90

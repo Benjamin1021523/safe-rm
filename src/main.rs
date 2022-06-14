@@ -182,15 +182,15 @@ fn filter_arguments(
     args: impl Iterator<Item = OsString>,
     protected_paths: &[PathBuf],
 ) -> Vec<OsString> {
-    let mut filtered_args = Vec::new();
-    for arg in args {
-        if protected_paths.contains(&PathBuf::from(normalize_path(&arg))) {
+    args.filter(|arg| {
+        if protected_paths.contains(&PathBuf::from(normalize_path(arg))) {
             println!("safe-rm: Skipping {}.", arg.to_string_lossy());
+            false
         } else {
-            filtered_args.push(arg);
+            true
         }
-    }
-    filtered_args
+    })
+    .collect()
 }
 
 fn read_config_files(globals: &[&str], locals: &[&str]) -> Vec<PathBuf> {

@@ -86,7 +86,10 @@ fn read_config<P: AsRef<Path>>(filename: P) -> Option<Vec<PathBuf>> {
     Some(paths)
 }
 
-fn parse_line<D: core::fmt::Display>(filename: D, line_result: io::Result<String>) -> Option<Vec<PathBuf>> {
+fn parse_line<D: core::fmt::Display>(
+    filename: D,
+    line_result: io::Result<String>,
+) -> Option<Vec<PathBuf>> {
     let line = line_result.ok().or_else(|| {
         println!("safe-rm: Ignoring unreadable line in {}.", filename);
         None

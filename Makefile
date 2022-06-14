@@ -25,10 +25,13 @@ test:
 	cargo test
 
 lint:
-	cargo-geiger --all-dependencies --quiet true
-	cargo audit --deny warnings --quiet
 	cargo outdated --root-deps-only
 	cargo clippy --quiet
 	cargo doc --quiet
 	cargo fmt --check
+
+# Tools which aren't in Debian
+check:
+	cargo-geiger --all-dependencies --quiet true
+	cargo audit --deny warnings --quiet
 	cargo tarpaulin --fail-under 90

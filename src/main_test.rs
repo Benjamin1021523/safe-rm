@@ -15,6 +15,7 @@
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashSet;
     use std::ffi::OsString;
     use std::fs::{self, File};
     use std::io::{self, Write};
@@ -176,7 +177,7 @@ mod tests {
         assert_eq!(
             filter_arguments(
                 vec![OsString::from("/safe".to_string())].into_iter(),
-                &vec![PathBuf::from("/safe")]
+                &HashSet::from([PathBuf::from("/safe")])
             ),
             Vec::<OsString>::new()
         );
@@ -187,14 +188,17 @@ mod tests {
                     OsString::from("/unsafe".to_string())
                 ]
                 .into_iter(),
-                &vec![PathBuf::from("/safe")]
+                &HashSet::from([PathBuf::from("/safe")])
             ),
             vec![OsString::from("/unsafe".to_string())]
         );
 
         // Degenerate cases
         assert_eq!(
-            filter_arguments(Vec::<OsString>::new().into_iter(), &Vec::<PathBuf>::new()),
+            filter_arguments(
+                Vec::<OsString>::new().into_iter(),
+                &HashSet::<PathBuf>::new()
+            ),
             Vec::<OsString>::new()
         );
         assert_eq!(
@@ -204,7 +208,7 @@ mod tests {
                     OsString::from("/unsafe".to_string())
                 ]
                 .into_iter(),
-                &Vec::<PathBuf>::new()
+                &HashSet::<PathBuf>::new()
             ),
             vec![
                 OsString::from("/safe".to_string()),
@@ -214,7 +218,7 @@ mod tests {
         assert_eq!(
             filter_arguments(
                 Vec::<OsString>::new().into_iter(),
-                &vec![PathBuf::from("/safe")]
+                &HashSet::from([PathBuf::from("/safe")])
             ),
             Vec::<OsString>::new()
         );
@@ -227,7 +231,7 @@ mod tests {
                     OsString::from("/unsafe".to_string())
                 ]
                 .into_iter(),
-                &vec![PathBuf::from("/")]
+                &HashSet::from([PathBuf::from("/")])
             ),
             vec![OsString::from("/unsafe".to_string())]
         );
@@ -264,7 +268,7 @@ mod tests {
                     OsString::from(&symlink_to_protected_file),
                 ]
                 .into_iter(),
-                &vec![PathBuf::from("/usr"), PathBuf::from(&protected_symlink)]
+                &HashSet::from([PathBuf::from("/usr"), PathBuf::from(&protected_symlink)])
             ),
             vec![empty_file, unprotected_symlink, symlink_to_protected_file]
         );
@@ -293,7 +297,7 @@ mod tests {
                 &[file_path2.to_str().unwrap(), file_path1.to_str().unwrap()],
                 &[]
             ),
-            vec![PathBuf::from("/home"), PathBuf::from("/tmp")]
+            HashSet::from([PathBuf::from("/home"), PathBuf::from("/tmp")])
         );
 
         // Duplicate lines
@@ -302,7 +306,7 @@ mod tests {
                 &[file_path1.to_str().unwrap(), file_path1.to_str().unwrap()],
                 &[]
             ),
-            vec![PathBuf::from("/home")]
+            HashSet::from([PathBuf::from("/home")])
         );
     }
 

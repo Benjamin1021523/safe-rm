@@ -18,6 +18,7 @@
 mod main_test;
 
 use glob::glob;
+use std::collections::HashSet;
 use std::ffi::{OsStr, OsString};
 use std::fs::{self, File};
 use std::io::{self, BufRead};
@@ -180,7 +181,7 @@ fn normalize_path(arg: &OsStr) -> OsString {
 
 fn filter_arguments(
     args: impl Iterator<Item = OsString>,
-    protected_paths: &[PathBuf],
+    protected_paths: &HashSet<PathBuf>,
 ) -> Vec<OsString> {
     args.filter(|arg| {
         if protected_paths.contains(&PathBuf::from(normalize_path(arg))) {
@@ -193,8 +194,8 @@ fn filter_arguments(
     .collect()
 }
 
-fn read_config_files(globals: &[&str], locals: &[&str]) -> Vec<PathBuf> {
-    let mut protected_paths: Vec<PathBuf> =
+fn read_config_files(globals: &[&str], locals: &[&str]) -> HashSet<PathBuf> {
+    let mut protected_paths: HashSet<PathBuf> =
         globals.iter().filter_map(read_config).flatten().collect();
 
     if let Ok(value) = std::env::var("HOME") {
@@ -210,8 +211,6 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> Vec<PathBuf> {
     if protected_paths.is_empty() {
         protected_paths.extend(DEFAULT_PATHS.iter().map(PathBuf::from));
     }
-    protected_paths.sort();
-    protected_paths.dedup();
 
     protected_paths
 }

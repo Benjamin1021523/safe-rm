@@ -79,11 +79,12 @@ fn read_config<P: AsRef<Path>>(filename: P) -> Option<Vec<PathBuf>> {
     })?;
 
     let reader = io::BufReader::new(f);
-    for line_result in reader.lines() {
-        if let Some(line_paths) = parse_line(filename.as_ref().display(), line_result) {
-            paths.extend(line_paths.into_iter());
-        }
-    }
+    paths.extend(
+        reader
+            .lines()
+            .filter_map(|line| parse_line(filename.as_ref().display(), line))
+            .flatten(),
+    );
     Some(paths)
 }
 

@@ -21,7 +21,7 @@ use glob::glob;
 use std::collections::HashSet;
 use std::ffi::{OsStr, OsString};
 use std::fs::{self, File};
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Error, ErrorKind};
 use std::path::{Path, PathBuf};
 use std::process;
 
@@ -238,21 +238,24 @@ fn run(
     }
 }
 
-fn ensure_real_rm_is_callable() -> io::Result<()> {
+fn ensure_real_rm_is_callable(real_rm: &str) -> io::Result<()> {
     // Make sure we're not calling ourselves recursively.
-    if fs::canonicalize(REAL_RM)? == fs::canonicalize(std::env::current_exe()?)? {
-        println!("safe-rm: Cannot find the real \"rm\" binary.");
-        process::exit(1);
+    if fs::canonicalize(real_rm)? == fs::canonicalize(std::env::current_exe()?)? {
+        return Err(Error::new(
+            ErrorKind::Other,
+            "The real rm command points to the safe-rm binary.",
+        ));
     }
     Ok(())
 }
 
 fn main() {
-    if let Err(e) = ensure_real_rm_is_callable() {
+    if let Err(e) = ensure_real_rm_is_callable(REAL_RM) {
         println!(
             "safe-rm: Cannot check that the real \"rm\" binary is callable: {}",
             e
         );
+        process::exit(1);
     }
     process::exit(run(
         REAL_RM,

@@ -421,6 +421,11 @@ mod tests {
     fn ensure_real_rm_is_callable() {
         use super::super::ensure_real_rm_is_callable;
 
-        assert!(ensure_real_rm_is_callable().is_ok());
+        assert!(ensure_real_rm_is_callable("/bin/rm").is_ok());
+
+        assert!(ensure_real_rm_is_callable("/non/existent/path/to/rm").is_err());
+        assert!(
+            ensure_real_rm_is_callable(std::env::current_exe().unwrap().to_str().unwrap()).is_err()
+        );
     }
 }

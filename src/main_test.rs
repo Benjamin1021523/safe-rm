@@ -31,12 +31,17 @@ mod tests {
         let dir = tempdir().unwrap();
         let file_path = dir.path().join("oneline");
         writeln!(File::create(&file_path).unwrap(), "/home").unwrap();
+        let mut perms = fs::metadata(&file_path).unwrap().permissions();
+        perms.set_mode(0o444); // read-only
+        fs::set_permissions(&file_path, perms).unwrap();
+
+        // Reading from the file should work.
         let paths = read_config(&file_path).unwrap();
         assert_eq!(paths.len(), 1);
         assert_eq!(paths, vec![PathBuf::from("/home")]);
 
         // Make the file unreadable and check for an error.
-        let mut perms = fs::metadata(&file_path).unwrap().permissions();
+        perms = fs::metadata(&file_path).unwrap().permissions();
         perms.set_mode(0o200); // not readable by anyone
         fs::set_permissions(&file_path, perms).unwrap();
         assert!(read_config(&file_path).is_none());

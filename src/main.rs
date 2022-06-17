@@ -217,7 +217,7 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> HashSet<PathBuf> {
 }
 
 fn run(
-    rm_binary: &str,
+    rm_binary: &OsStr,
     args: impl Iterator<Item = OsString>,
     globals: &[&str],
     locals: &[&str],
@@ -232,13 +232,16 @@ fn run(
     {
         Ok(status) => status.code().unwrap_or(1),
         Err(_) => {
-            println!("safe-rm: Failed to run the {} command.", REAL_RM);
+            println!(
+                "safe-rm: Failed to run the {} command.",
+                rm_binary.to_string_lossy()
+            );
             1
         }
     }
 }
 
-fn ensure_real_rm_is_callable(real_rm: &str) -> io::Result<()> {
+fn ensure_real_rm_is_callable(real_rm: &OsStr) -> io::Result<()> {
     // Make sure we're not calling ourselves recursively.
     if fs::canonicalize(real_rm)? == fs::canonicalize(std::env::current_exe()?)? {
         return Err(Error::new(
@@ -250,7 +253,7 @@ fn ensure_real_rm_is_callable(real_rm: &str) -> io::Result<()> {
 }
 
 fn main() {
-    if let Err(e) = ensure_real_rm_is_callable(REAL_RM) {
+    if let Err(e) = ensure_real_rm_is_callable(REAL_RM.as_ref()) {
         println!(
             "safe-rm: Cannot check that the real \"rm\" binary is callable: {}",
             e
@@ -258,7 +261,7 @@ fn main() {
         process::exit(1);
     }
     process::exit(run(
-        REAL_RM,
+        REAL_RM.as_ref(),
         std::env::args_os().skip(1),
         &[GLOBAL_CONFIG, LOCAL_GLOBAL_CONFIG],
         &[USER_CONFIG, LEGACY_USER_CONFIG],

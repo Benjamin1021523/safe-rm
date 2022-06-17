@@ -335,7 +335,7 @@ mod tests {
         // Trying to delete a directory without "-r" should fail.
         assert_eq!(
             run(
-                REAL_RM,
+                REAL_RM.as_ref(),
                 vec![OsString::from(dir.path())].into_iter(),
                 &[],
                 &[]
@@ -347,7 +347,7 @@ mod tests {
         assert_eq!(Path::new(&empty_file).exists(), true);
         assert_eq!(
             run(
-                REAL_RM,
+                REAL_RM.as_ref(),
                 vec![
                     OsString::from(&empty_file),
                     OsString::from("/usr".to_string())
@@ -377,7 +377,7 @@ mod tests {
         // Trying to delete a missing file should fail.
         assert_eq!(
             run(
-                REAL_RM,
+                REAL_RM.as_ref(),
                 vec![OsString::from(&missing_file)].into_iter(),
                 &[],
                 &[]
@@ -388,7 +388,7 @@ mod tests {
         // The "--help" option should work.
         assert_eq!(
             run(
-                REAL_RM,
+                REAL_RM.as_ref(),
                 vec![OsString::from("--help".to_string())].into_iter(),
                 &[],
                 &[]
@@ -406,7 +406,7 @@ mod tests {
         .unwrap();
         assert_eq!(
             run(
-                REAL_RM,
+                REAL_RM.as_ref(),
                 vec![OsString::from(&file1), OsString::from(&file2)].into_iter(),
                 &[&config_file],
                 &[]
@@ -421,11 +421,9 @@ mod tests {
     fn ensure_real_rm_is_callable() {
         use super::super::ensure_real_rm_is_callable;
 
-        assert!(ensure_real_rm_is_callable("/bin/rm").is_ok());
+        assert!(ensure_real_rm_is_callable("/bin/rm".as_ref()).is_ok());
 
-        assert!(ensure_real_rm_is_callable("/non/existent/path/to/rm").is_err());
-        assert!(
-            ensure_real_rm_is_callable(std::env::current_exe().unwrap().to_str().unwrap()).is_err()
-        );
+        assert!(ensure_real_rm_is_callable("/non/existent/path/to/rm".as_ref()).is_err());
+        assert!(ensure_real_rm_is_callable(std::env::current_exe().unwrap().as_ref()).is_err());
     }
 }

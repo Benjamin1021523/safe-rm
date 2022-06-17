@@ -324,11 +324,11 @@ mod tests {
         use tempfile::tempdir;
 
         let dir = tempdir().unwrap();
-        let empty_file = dir.path().join("empty").to_str().unwrap().to_string();
+        let empty_file = dir.path().join("empty").into_os_string();
         File::create(&empty_file).unwrap();
-        let missing_file = dir.path().join("missing").to_str().unwrap().to_string();
-        let file1 = dir.path().join("file1").to_str().unwrap().to_string();
-        let file2 = dir.path().join("file2").to_str().unwrap().to_string();
+        let missing_file = dir.path().join("missing").into_os_string();
+        let file1 = dir.path().join("file1").into_os_string();
+        let file2 = dir.path().join("file2").into_os_string();
         File::create(&file1).unwrap();
         File::create(&file2).unwrap();
 
@@ -348,11 +348,7 @@ mod tests {
         assert_eq!(
             run(
                 REAL_RM.as_ref(),
-                vec![
-                    OsString::from(&empty_file),
-                    OsString::from("/usr".to_string())
-                ]
-                .into_iter(),
+                vec![empty_file.to_os_string(), OsString::from("/usr")].into_iter(),
                 &[],
                 &[]
             ),
@@ -365,8 +361,8 @@ mod tests {
         assert_eq!(Path::new(&empty_file).exists(), true);
         assert_eq!(
             run(
-                &missing_file,
-                vec![OsString::from(&empty_file)].into_iter(),
+                &missing_file.to_os_string(),
+                vec![empty_file.to_os_string()].into_iter(),
                 &[],
                 &[]
             ),
@@ -378,7 +374,7 @@ mod tests {
         assert_eq!(
             run(
                 REAL_RM.as_ref(),
-                vec![OsString::from(&missing_file)].into_iter(),
+                vec![missing_file.to_os_string()].into_iter(),
                 &[],
                 &[]
             ),
@@ -389,7 +385,7 @@ mod tests {
         assert_eq!(
             run(
                 REAL_RM.as_ref(),
-                vec![OsString::from("--help".to_string())].into_iter(),
+                vec![OsString::from("--help")].into_iter(),
                 &[],
                 &[]
             ),
@@ -407,7 +403,7 @@ mod tests {
         assert_eq!(
             run(
                 REAL_RM.as_ref(),
-                vec![OsString::from(&file1), OsString::from(&file2)].into_iter(),
+                vec![file1.to_os_string(), file2.to_os_string()].into_iter(),
                 &[&config_file],
                 &[]
             ),

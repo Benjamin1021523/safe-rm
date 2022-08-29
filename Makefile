@@ -18,7 +18,7 @@ $(TARBALL):
 	rm -rf $(BUILDDIR)
 
 clean:
-	-rm -rf $(TARBALL) $(TARBALL).asc $(BUILDDIR) target
+	rm -rf $(TARBALL) $(TARBALL).asc $(BUILDDIR) target
 
 test:
 	cargo check --all-targets

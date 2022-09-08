@@ -211,6 +211,15 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> HashSet<PathBuf> {
 
     protected_paths.extend(DEFAULT_PATHS.iter().map(PathBuf::from));
 
+    for mut path_buf in protected_paths.clone() {
+        loop {
+            protected_paths.insert(path_buf.clone());
+            if ! path_buf.pop() {
+                break;
+            }
+        }
+    }
+
     protected_paths
 }
 

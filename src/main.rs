@@ -209,9 +209,7 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> HashSet<PathBuf> {
         );
     }
 
-    if protected_paths.is_empty() {
-        protected_paths.extend(DEFAULT_PATHS.iter().map(PathBuf::from));
-    }
+    protected_paths.extend(DEFAULT_PATHS.iter().map(PathBuf::from));
 
     protected_paths
 }

@@ -27,10 +27,10 @@ use std::process;
 
 const GLOBAL_CONFIG: &str = "/etc/safe-rm.conf";
 const LOCAL_GLOBAL_CONFIG: &str = "/usr/local/etc/safe-rm.conf";
-const USER_CONFIG: &str = ".config/safe-rm";
-const LEGACY_USER_CONFIG: &str = ".safe-rm";
+const USER_CONFIG: &str = ".config/safe-rm"; // relative path from user's home directory
+const LEGACY_USER_CONFIG: &str = ".safe-rm"; // relative path from user's home directory
 
-const REAL_RM: &str = "/bin/rm";
+const REAL_RM: &str = "/bin/real-rm";
 
 const DEFAULT_PATHS: &[&str] = &[
     "/bin",

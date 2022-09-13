@@ -13,6 +13,18 @@ build:
 dist: $(TARBALL)
 	gpg --armor --sign --detach-sig $(TARBALL)
 
+install:
+ifneq ($(shell id -u), 0)
+	@echo "need superuser to replace rm file"
+	exit 1
+endif
+ifeq ($(wildcard $(RELEASE_BINARY)),)
+	@echo "compiled safe-rm file not found"
+	exit 1
+endif
+	mv /bin/rm /bin/real-rm
+	mv target/release/safe-rm /bin/rm || true
+
 $(TARBALL):
 	mkdir $(BUILDDIR)
 	cp -r `cat Manifest` $(BUILDDIR)

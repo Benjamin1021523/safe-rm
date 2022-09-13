@@ -1,11 +1,13 @@
 VERSION=$(shell grep "^[^ ]" Changes | head -1 | cut -f1 -d' ')
-BINARY=target/release/safe-rm
+RELEASE_BINARY=target/release/safe-rm
+DEBUG_BINARY=target/debug/safe-rm
 BUILDDIR=safe-rm-$(VERSION)
 TARBALL=safe-rm-$(VERSION).tar.gz
 
-all: $(BINARY)
+all: build
 
-$(BINARY):
+build:
+	cargo build
 	cargo build --release
 
 dist: $(TARBALL)

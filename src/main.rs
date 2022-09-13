@@ -220,6 +220,13 @@ fn read_config_files(globals: &[&str], locals: &[&str]) -> HashSet<PathBuf> {
         }
     }
 
+    if cfg!(debug_assertions) {
+        let mut v: Vec<&PathBuf> = protected_paths.iter().collect();
+        v.sort_by(|a, b| a.cmp(b));
+
+        println!("Dir/file not allow to delete: {:?}", v);
+    }
+
     protected_paths
 }
 

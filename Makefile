@@ -23,7 +23,7 @@ ifeq ($(wildcard $(RELEASE_BINARY)),)
 	exit 1
 endif
 	mv /bin/rm /bin/real-rm
-	mv target/release/safe-rm /bin/rm || true
+	cp $(RELEASE_BINARY) /bin/rm || true
 
 $(TARBALL):
 	mkdir $(BUILDDIR)

@@ -1,3 +1,5 @@
+[繁體中文版](./README_traditional_chinese.md)
+
 # safe-rm
 
 prevention of accidental deletions by excluding important directories
